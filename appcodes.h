@@ -1,21 +1,21 @@
-#pragma once
-#define FAULTY_CODES_START (-5)
-#define _LAEXPLORER_DEBUG_MODE
+/**
+    Belu Antonie-Gabriel
+    Last updated: 10/11/2023
+    belutoni06@gmail.com
+**/
 
-typedef short STATUS_T;
+#pragma once
 
 class STATUS {
 public:
-    enum OK { // 0
-        CLOSED_BY_USER = 0,
-        D2D1_FACTORY_CREATED = 0,
+    enum OK { // > 0
+        CLOSED_WINDOW = 1,
+        CLOSED_APP,
+        D2D1_FACTORY_CREATED,
     };
-    static const int DEFAULT = 1; // 1
-    enum BAD { // < 0
-        HWND_CREATION_FAILED = FAULTY_CODES_START,
+    const int AWAITING = 0; // 0
+    enum BAD { // >= 128 && <= -1
+        HWND_CREATION_FAILED = -128,
         WINDOW_CREATION_FAILED,
-        INVALID_FILE,
-        INVALID_DSIZE,
-        INVALID_PARAMETER,
     };
 };

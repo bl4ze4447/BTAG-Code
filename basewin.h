@@ -1,16 +1,16 @@
 /**
     Belu Antonie-Gabriel
-    Last updated: 11/8/2023
-    Do not publish this code; if you somehow
-    get a copy of it, remove it and report it at
+    Last updated: 10/11/2023
     belutoni06@gmail.com
 **/
 
 #pragma once
 
-#ifndef UNICODE
+#ifndef UNICODE // fuck this
 #define UNICODE
 #endif
+
+#define DEBUG_BTAG_CODE
 
 #include <windows.h>
 #include "appcodes.h"
@@ -26,12 +26,12 @@ namespace BWND {
             DERIVED_TYPE *pThis;
 
             if (uMsg == WM_NCCREATE) {
-                auto pCreate = (CREATESTRUCT*) lParam;
-                pThis = (DERIVED_TYPE*) pCreate->lpCreateParams;
-                SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)pThis);
+                auto pCreate = reinterpret_cast<CREATESTRUCTW *>(lParam);
+                pThis = static_cast<DERIVED_TYPE*>(pCreate->lpCreateParams);
+                SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pThis));
                 pThis->m_hwnd = hwnd;
             } else {
-                pThis = (DERIVED_TYPE*) GetWindowLongPtrW(hwnd, GWLP_USERDATA);
+                pThis = reinterpret_cast<DERIVED_TYPE*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
             }
 
             if (pThis) {
@@ -57,7 +57,7 @@ namespace BWND {
             wndClass.lpfnWndProc = DERIVED_TYPE::WindowProc;
             wndClass.hInstance = GetModuleHandle(nullptr);
             wndClass.lpszClassName = ClassName();
-            RegisterClass(&wndClass);
+            RegisterClassW(&wndClass);
 
             m_hwnd = CreateWindowExW(dwExStyle, ClassName(), lpWindowName, dwStyle,
                                      x, y, nWidth, nHeight, hwndParent, hMenu, GetModuleHandle(nullptr), this);
